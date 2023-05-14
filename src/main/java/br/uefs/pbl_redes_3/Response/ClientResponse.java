@@ -1,4 +1,4 @@
-package br.uefs.pbl_redes_3.Response;
+package br.uefs.pbl_redes_3.response;
 
 import java.util.UUID;
 
