@@ -16,7 +16,6 @@ public class LoginController {
 
 
     public TokenResponse create(@RequestBody final LoginRequest request){
-
         return null;
     }
 }
