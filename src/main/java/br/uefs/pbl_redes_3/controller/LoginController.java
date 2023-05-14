@@ -1,4 +1,4 @@
-package br.uefs.pbl_redes_3.Controller;
+package br.uefs.pbl_redes_3.controller;
 
 import br.uefs.pbl_redes_3.Request.LoginRequest;
 import br.uefs.pbl_redes_3.model.TokenResponse;
@@ -17,6 +17,6 @@ public class LoginController {
 
     public TokenResponse create(@RequestBody final LoginRequest request){
 
-        return
+        return null;
     }
 }
