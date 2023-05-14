@@ -1,14 +1,11 @@
-package br.uefs.pbl_redes_3.model;
+package br.uefs.pbl_redes_3.Request;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
-public class ClientModel {
-    private UUID id;
+public class ClientRequest {
     private String name;
     private String password;
     private int cpf;
