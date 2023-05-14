@@ -4,6 +4,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaymentsModel {
+public class PaymentsModel extends TransactionModel{
 
 }
