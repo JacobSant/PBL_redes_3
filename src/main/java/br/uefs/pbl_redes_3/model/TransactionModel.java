@@ -8,9 +8,9 @@ import java.util.UUID;
 @Setter
 
 public abstract class TransactionModel {
-    private double value;
-    private BankReferenceModel destinyBank;
-    private ClientReferenceModel sourceClient;
-    private ClientReferenceModel destinyClient;
-    private LocalDateTime date;
+    protected double value;
+    protected BankReferenceModel destinyBank;
+    protected ClientReferenceModel sourceClient;
+    protected ClientReferenceModel destinyClient;
+    protected LocalDateTime date;
 }

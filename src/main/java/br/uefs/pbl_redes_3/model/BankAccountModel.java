@@ -8,8 +8,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public abstract class BankAccountModel {
-    private UUID id;
-    private double balance;
-    private int accountNumber;
-    private UUID bankId;
+    protected UUID id;
+    protected double balance;
+    protected int accountNumber;
+    protected UUID bankId;
 }
