@@ -1,7 +1,5 @@
 package br.uefs.pbl_redes_3.service;
 
-import br.uefs.pbl_redes_3.Request.ClientRequest;
-import br.uefs.pbl_redes_3.Response.ClientResponse;
 import br.uefs.pbl_redes_3.model.ClientModel;
 import br.uefs.pbl_redes_3.repository.ClientRepository;
 import org.springframework.stereotype.Service;

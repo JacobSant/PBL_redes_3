@@ -7,7 +7,8 @@ import java.time.LocalTime;
 import java.util.UUID;
 @Getter
 @Setter
-public class Token {
+public class TokenModel {
     private UUID clientId;
     private LocalTime time;
+    private String token;
 }
