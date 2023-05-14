@@ -1,9 +1,9 @@
 package br.uefs.pbl_redes_3.model;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 @Getter
 @Setter
 

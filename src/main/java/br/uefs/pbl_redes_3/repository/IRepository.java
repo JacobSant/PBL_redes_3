@@ -10,7 +10,7 @@ public interface IRepository<T,ID>{
 
     public boolean deleteIf(Predicate<T> predicate);
 
-    public T update(T model);
+    public Optional<T> update(T model);
 
     public boolean contains(Predicate<T> predicate);
 
