@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class ClientReference {
+public class ClientReferenceModel {
     private String name;
     private UUID ClientId;
 }

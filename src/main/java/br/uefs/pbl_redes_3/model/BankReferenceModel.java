@@ -6,6 +6,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class Payments {
+public class BankReferenceModel {
+    private String name;
+    private UUID bankId;
 
 }
