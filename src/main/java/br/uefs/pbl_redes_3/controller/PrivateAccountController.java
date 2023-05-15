@@ -4,9 +4,11 @@ import br.uefs.pbl_redes_3.request.PrivateAccountRequest;
 import br.uefs.pbl_redes_3.response.PrivateAccountResponse;
 import br.uefs.pbl_redes_3.service.PrivateAccountService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/bank_account_private")
 public class PrivateAccountController {
     private final PrivateAccountService privateAccountService;
 
@@ -14,8 +16,9 @@ public class PrivateAccountController {
         this.privateAccountService = privateAccountService;
     }
 
-    @PostMapping("/bank_account")
-    public PrivateAccountResponse create(final PrivateAccountRequest request){
-        return privateAccountService.create(request);
+    @PostMapping()
+    public PrivateAccountResponse create(PrivateAccountRequest privateAccountRequest){
+        return privateAccountService.create(privateAccountRequest);
     }
+
 }

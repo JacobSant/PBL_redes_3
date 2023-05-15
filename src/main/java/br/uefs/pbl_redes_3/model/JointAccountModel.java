@@ -7,5 +7,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class JointAccountModel extends BankAccountModel{
-    private UUID clientId;
+    private UUID clientId1;
+    private UUID clientId2;
 }

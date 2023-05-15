@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.util.UUID;
 @Getter
 @Setter
-public class PrivateAccountRequest {
-    private UUID clientId;
+public class JointAccountRequest {
+    private UUID clientId1;
+    private UUID clientId2;
 }
