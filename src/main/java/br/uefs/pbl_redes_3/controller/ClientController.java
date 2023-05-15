@@ -4,7 +4,6 @@ import br.uefs.pbl_redes_3.request.ClientRequest;
 import br.uefs.pbl_redes_3.response.ClientResponse;
 import br.uefs.pbl_redes_3.service.ClientService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,7 +15,7 @@ public class ClientController {
     }
 
     @PostMapping("/clients")
-    public ClientResponse create(@RequestBody ClientRequest request) {
+    public ClientResponse create(final ClientRequest request) {
         return clientService.create(request);
     }
 }
