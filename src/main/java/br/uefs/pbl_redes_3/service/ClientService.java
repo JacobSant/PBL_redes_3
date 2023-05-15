@@ -21,11 +21,15 @@ public class ClientService {
 
     public ClientResponse create(ClientRequest request){
         ClientModel client = modelMapper.map(request,ClientModel.class);
-        if(clientRapository.contains(c -> c.getEmail().equals(client.getEmail()))){
-            if(clientRapository.contains(c -> c.getCpf() == client.getCpf())){
+        if(!clientRapository.contains(c -> c.getEmail().equals(client.getEmail()))){
+            if(!clientRapository.contains(c -> c.getCpf() == client.getCpf())){
                 return modelMapper.map(clientRapository.save(client), ClientResponse.class);
             }
         }
         return null;
+    }
+
+    public ClientResponse findByEmail(String email){
+        return modelMapper.map(clientRapository.findByEmail(email), ClientResponse.class);
     }
 }

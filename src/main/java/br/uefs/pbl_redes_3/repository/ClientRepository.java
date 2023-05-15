@@ -15,7 +15,8 @@ public class ClientRepository implements IRepository<ClientModel, UUID> {
     List<ClientModel> clients = new ArrayList<>();
     @Override
     public ClientModel save(ClientModel model) {
-        model.setId(UUID.fromString(model.getName() + model.getEmail()));
+        String uuid = model.getName() + model.getEmail();
+        model.setId(UUID.nameUUIDFromBytes(uuid.getBytes()));
         clients.add(model);
         return model;
     }
@@ -56,4 +57,9 @@ public class ClientRepository implements IRepository<ClientModel, UUID> {
     public List<ClientModel> findAll(Predicate<ClientModel> predicate) {
         return clients.stream().filter(predicate).collect(Collectors.toList());
     }
+
+    public Optional<ClientModel> findByEmail(String email) {
+        return clients.stream().filter(c -> c.getEmail().equals(email)).findFirst();
+    }
+
 }
