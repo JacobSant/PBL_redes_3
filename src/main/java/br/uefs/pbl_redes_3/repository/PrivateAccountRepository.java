@@ -57,4 +57,8 @@ public class PrivateAccountRepository implements IRepository<PrivateAccountModel
     public List<PrivateAccountModel> findAll(Predicate<PrivateAccountModel> predicate) {
         return privateAccounts.stream().filter(predicate).collect(Collectors.toList());
     }
+
+    public Optional<PrivateAccountModel> findByAccountNumber(int accountNumber){
+        return privateAccounts.stream().filter(acc -> acc.getAccountNumber() == accountNumber).findFirst();
+    }
 }

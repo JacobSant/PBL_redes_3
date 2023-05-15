@@ -16,6 +16,6 @@ public class LoginController {
 
     @PostMapping("/login")
     public LoginResponse create(final LoginRequest request){
-        return null;
+        return tokenService.create(request);
     }
 }
