@@ -15,7 +15,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ public class TokenService {
                 throw new RegisterException(HttpStatus.UNAUTHORIZED, "NOT AUTHENTICATED");
             }
         } else {
-            throw new RegisterException(HttpStatus.NOT_FOUND, "CLIENT NOT FOUND");
+            throw new RegisterException(HttpStatus.NOT_FOUND, "CLIENT");
         }
     }
 
