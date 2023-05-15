@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -54,13 +55,19 @@ public class TokenService {
 
     private String generateToken() {
         String token = "";
-        byte[] bytes = new byte[128];
+        byte[] bytes = new byte[32];
         SecureRandom random = new SecureRandom();
         random.nextBytes(bytes);
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(bytes);
-            token = new String(md.digest());
+            byte[] messageDigest = md.digest();
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashText = number.toString(16);
+            while (hashText.length() < 32) {
+                hashText = "0" + hashText;
+            }
+            token = new String(hashText);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
