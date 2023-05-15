@@ -2,6 +2,7 @@ package br.uefs.pbl_redes_3.repository;
 
 import br.uefs.pbl_redes_3.model.JointAccountModel;
 import br.uefs.pbl_redes_3.model.PrivateAccountModel;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
+@Repository
 public class JointAccountRepository implements IRepository<JointAccountModel, UUID>{
     List<JointAccountModel> jointAccounts = new ArrayList<>();
     @Override

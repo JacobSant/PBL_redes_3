@@ -1,9 +1,7 @@
 package br.uefs.pbl_redes_3.controller;
 
 import br.uefs.pbl_redes_3.request.JointAccountRequest;
-import br.uefs.pbl_redes_3.request.PrivateAccountRequest;
 import br.uefs.pbl_redes_3.response.JointAccountResponse;
-import br.uefs.pbl_redes_3.response.PrivateAccountResponse;
 import br.uefs.pbl_redes_3.service.JointAccountService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -4,6 +4,7 @@ import br.uefs.pbl_redes_3.request.PrivateAccountRequest;
 import br.uefs.pbl_redes_3.response.PrivateAccountResponse;
 import br.uefs.pbl_redes_3.service.PrivateAccountService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ public class PrivateAccountController {
     }
 
     @PostMapping()
-    public PrivateAccountResponse create(PrivateAccountRequest privateAccountRequest){
+    public PrivateAccountResponse create(@RequestBody final PrivateAccountRequest privateAccountRequest){
         return privateAccountService.create(privateAccountRequest);
     }
 

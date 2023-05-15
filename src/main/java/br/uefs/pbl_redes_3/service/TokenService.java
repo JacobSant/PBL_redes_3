@@ -1,4 +1,6 @@
 package br.uefs.pbl_redes_3.service;
+
+import br.uefs.pbl_redes_3.exception.RegisterException;
 import br.uefs.pbl_redes_3.model.ClientModel;
 import br.uefs.pbl_redes_3.model.TokenModel;
 import br.uefs.pbl_redes_3.repository.ClientRepository;
@@ -6,6 +8,7 @@ import br.uefs.pbl_redes_3.repository.TokenRepository;
 import br.uefs.pbl_redes_3.request.LoginRequest;
 import br.uefs.pbl_redes_3.response.LoginResponse;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -28,11 +31,11 @@ public class TokenService {
     }
 
 
-    public LoginResponse create(LoginRequest request){
+    public LoginResponse create(LoginRequest request) {
         Optional<ClientModel> expectedClient = clientRepository.findByEmail(request.getEmail());
-        if(expectedClient.isPresent()){
+        if (expectedClient.isPresent()) {
             ClientModel client = expectedClient.get();
-            if(authenticate(client,request)){
+            if (authenticate(client, request)) {
                 TokenModel token = new TokenModel();
                 Date currentDate = new Date();
                 token.setClientId(client.getId());
@@ -41,12 +44,15 @@ public class TokenService {
                 token.setToken(generateToken());
                 tokenRepository.save(token);
                 return modelMapper.map(token, LoginResponse.class);
+            } else {
+                throw new RegisterException(HttpStatus.UNAUTHORIZED, "NOT AUTHENTICATED");
             }
+        } else {
+            throw new RegisterException(HttpStatus.NOT_FOUND, "CLIENT NOT FOUND");
         }
-        return null;
     }
 
-    private String generateToken(){
+    private String generateToken() {
         String token = "";
         byte[] bytes = new byte[128];
         SecureRandom random = new SecureRandom();
@@ -61,7 +67,7 @@ public class TokenService {
         return token;
     }
 
-    private boolean authenticate(ClientModel client, LoginRequest request){
+    private boolean authenticate(ClientModel client, LoginRequest request) {
         return client.getEmail().equals(request.getEmail()) && client.getPassword().equals(request.getPassword());
     }
 }

@@ -7,5 +7,5 @@ import java.util.UUID;
 @Getter
 @Setter
 public class PrivateAccountRequest {
-    private UUID clientId;
+    private String clientId;
 }
