@@ -16,7 +16,8 @@ public class PrivateAccountRepository implements IRepository<PrivateAccountModel
 
     @Override
     public PrivateAccountModel save(PrivateAccountModel model) {
-        model.setId(UUID.fromString(model.getAccountNumber() + UUID.randomUUID().toString()));
+
+        model.setId(UUID.nameUUIDFromBytes((model.getAccountNumber() + UUID.randomUUID().toString()).getBytes()));
         privateAccounts.add(model);
         return model;
     }
