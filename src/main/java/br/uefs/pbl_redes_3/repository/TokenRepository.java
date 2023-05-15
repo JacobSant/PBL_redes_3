@@ -7,36 +7,12 @@ import java.util.*;
 import java.util.function.Predicate;
 
 @Repository
-public class TokenRepository implements IRepository<TokenModel, UUID> {
+public class TokenRepository {
     List<TokenModel> tokens = new ArrayList<>();
-    @Override
+
     public TokenModel save(TokenModel model) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteIf(Predicate<TokenModel> predicate) {
-        return false;
-    }
-
-    @Override
-    public Optional<TokenModel> update(TokenModel model) {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean contains(Predicate<TokenModel> predicate) {
-        return false;
-    }
-
-    @Override
-    public Optional<TokenModel> findById(UUID uuid) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<TokenModel> findAll(Predicate<TokenModel> predicate) {
-        return null;
+        tokens.add(model);
+        return model;
     }
 
 }

@@ -1,9 +1,9 @@
-package br.uefs.pbl_redes_3.model;
+package br.uefs.pbl_redes_3.response;
 
 import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
-public class TokenResponse {
+public class LoginResponse {
     private String token;
 }

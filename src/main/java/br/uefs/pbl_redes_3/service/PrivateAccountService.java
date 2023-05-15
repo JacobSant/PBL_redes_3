@@ -5,18 +5,22 @@ import br.uefs.pbl_redes_3.repository.PrivateAccountRepository;
 import br.uefs.pbl_redes_3.request.PrivateAccountRequest;
 import br.uefs.pbl_redes_3.response.PrivateAccountResponse;
 import br.uefs.pbl_redes_3.utils.Mapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PrivateAccountService {
     private final PrivateAccountRepository privateAccountRepository;
+    private final ModelMapper modelMapper;
 
-    public PrivateAccountService(PrivateAccountRepository privateAccountRepository) {
+    public PrivateAccountService(final PrivateAccountRepository privateAccountRepository,
+                                 final ModelMapper modelMapper) {
         this.privateAccountRepository = privateAccountRepository;
+        this.modelMapper = modelMapper;
     }
 
     public PrivateAccountResponse create(PrivateAccountRequest request) {
-        PrivateAccountModel privateAccount = Mapper.map(request,PrivateAccountModel.class);
-        return Mapper.map(privateAccountRepository.save(privateAccount),PrivateAccountResponse.class);
+        PrivateAccountModel privateAccount = modelMapper.map(request,PrivateAccountModel.class);
+        return modelMapper.map(privateAccountRepository.save(privateAccount),PrivateAccountResponse.class);
     }
 }

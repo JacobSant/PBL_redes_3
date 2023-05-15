@@ -1,10 +1,14 @@
 package br.uefs.pbl_redes_3.utils;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class Mapper {
-    private static ModelMapper mapper = new ModelMapper();
-    public static <D> D map(Object source, Class<D> destination){
-        return mapper.map(source, destination);
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
     }
+
 }

@@ -6,6 +6,6 @@ import lombok.Setter;
 import java.util.UUID;
 @Getter
 @Setter
-public class JointAccount extends BankAccountModel{
+public class JointAccountModel extends BankAccountModel{
     private UUID clientId;
 }

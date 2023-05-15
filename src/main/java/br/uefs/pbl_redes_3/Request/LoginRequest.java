@@ -1,4 +1,4 @@
-package br.uefs.pbl_redes_3.Request;
+package br.uefs.pbl_redes_3.request;
 
 import lombok.Getter;
 import lombok.Setter;

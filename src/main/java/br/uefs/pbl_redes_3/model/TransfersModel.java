@@ -4,7 +4,4 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TransfersModel extends TransactionModel{
-
-
-}
+public class TransfersModel extends TransactionModel{}
