@@ -9,6 +9,7 @@ import java.util.UUID;
 @Setter
 public class TokenModel {
     private UUID clientId;
+    private UUID accountId;
     private Date issuedAt;
     private long expiresAt;
     private String token;

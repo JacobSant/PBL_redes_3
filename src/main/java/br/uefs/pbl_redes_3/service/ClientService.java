@@ -1,6 +1,6 @@
 package br.uefs.pbl_redes_3.service;
 
-import br.uefs.pbl_redes_3.exception.RegisterException;
+import br.uefs.pbl_redes_3.exception.RequestException;
 import br.uefs.pbl_redes_3.model.ClientModel;
 import br.uefs.pbl_redes_3.repository.ClientRepository;
 import br.uefs.pbl_redes_3.request.ClientRequest;
@@ -26,10 +26,10 @@ public class ClientService {
             if (!clientRepository.contains(c -> c.getCpf() == client.getCpf())) {
                 return modelMapper.map(clientRepository.save(client), ClientResponse.class);
             } else {
-                throw new RegisterException(HttpStatus.UNAUTHORIZED, "CPF");
+                throw new RequestException(HttpStatus.UNAUTHORIZED, "CPF");
             }
         } else {
-            throw new RegisterException(HttpStatus.UNAUTHORIZED, "EMAIL");
+            throw new RequestException(HttpStatus.UNAUTHORIZED, "EMAIL");
         }
     }
 

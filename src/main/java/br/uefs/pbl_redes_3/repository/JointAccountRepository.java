@@ -56,4 +56,8 @@ public class JointAccountRepository implements IRepository<JointAccountModel, UU
     public List<JointAccountModel> findAll(Predicate<JointAccountModel> predicate) {
         return jointAccounts.stream().filter(predicate).collect(Collectors.toList());
     }
+
+    public Optional<JointAccountModel> findByAccountNumber(int accountNumber) {
+        return jointAccounts.stream().filter(acc -> acc.getAccountNumber() == accountNumber).findFirst();
+    }
 }

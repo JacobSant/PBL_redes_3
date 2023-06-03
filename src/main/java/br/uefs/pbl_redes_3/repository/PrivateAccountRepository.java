@@ -16,7 +16,6 @@ public class PrivateAccountRepository implements IRepository<PrivateAccountModel
 
     @Override
     public PrivateAccountModel save(PrivateAccountModel model) {
-
         model.setId(UUID.nameUUIDFromBytes((model.getAccountNumber() + UUID.randomUUID().toString()).getBytes()));
         privateAccounts.add(model);
         return model;
@@ -51,7 +50,7 @@ public class PrivateAccountRepository implements IRepository<PrivateAccountModel
 
     @Override
     public Optional<PrivateAccountModel> findById(UUID uuid) {
-        return privateAccounts.stream().filter(acc -> acc.getBankId() == uuid).findFirst();
+        return privateAccounts.stream().filter(acc -> acc.getId() == uuid).findFirst();
     }
 
     @Override

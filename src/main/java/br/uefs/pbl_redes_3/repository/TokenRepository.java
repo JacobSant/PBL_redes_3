@@ -39,4 +39,8 @@ public class TokenRepository {
             return Optional.empty();
         }
     }
+
+    public Optional<TokenModel> findByToken(String token){
+        return tokens.stream().filter(t -> t.getToken().equals(token)).findFirst();
+    }
 }

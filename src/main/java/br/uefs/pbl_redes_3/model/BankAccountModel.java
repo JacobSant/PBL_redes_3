@@ -11,5 +11,5 @@ public abstract class BankAccountModel {
     protected UUID id;
     protected double balance;
     protected int accountNumber;
-    protected UUID bankId;
+    protected int bankId;
 }

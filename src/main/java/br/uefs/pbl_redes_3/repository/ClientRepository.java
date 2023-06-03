@@ -62,4 +62,8 @@ public class ClientRepository implements IRepository<ClientModel, UUID> {
         return clients.stream().filter(c -> c.getEmail().equals(email)).findFirst();
     }
 
+    public Optional<ClientModel> findByCpf(int cpf) {
+        return clients.stream().filter(c -> c.getCpf() == cpf).findFirst();
+    }
+
 }

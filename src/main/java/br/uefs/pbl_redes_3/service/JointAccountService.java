@@ -1,6 +1,6 @@
 package br.uefs.pbl_redes_3.service;
 
-import br.uefs.pbl_redes_3.exception.RegisterException;
+import br.uefs.pbl_redes_3.exception.RequestException;
 import br.uefs.pbl_redes_3.model.JointAccountModel;
 import br.uefs.pbl_redes_3.repository.ClientRepository;
 import br.uefs.pbl_redes_3.repository.JointAccountRepository;
@@ -27,7 +27,7 @@ public class JointAccountService {
             JointAccountModel jointAccount = modelMapper.map(request,JointAccountModel.class);
             return modelMapper.map(jointAccountRepository.save(jointAccount),JointAccountResponse.class);
         }
-        throw new RegisterException(HttpStatus.NOT_FOUND, "CLIENT");
+        throw new RequestException(HttpStatus.NOT_FOUND, "CLIENT");
 
     }
 

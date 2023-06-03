@@ -1,9 +1,13 @@
 package br.uefs.pbl_redes_3.service;
 
-import br.uefs.pbl_redes_3.exception.RegisterException;
+import br.uefs.pbl_redes_3.exception.RequestException;
 import br.uefs.pbl_redes_3.model.ClientModel;
+import br.uefs.pbl_redes_3.model.JointAccountModel;
+import br.uefs.pbl_redes_3.model.PrivateAccountModel;
 import br.uefs.pbl_redes_3.model.TokenModel;
 import br.uefs.pbl_redes_3.repository.ClientRepository;
+import br.uefs.pbl_redes_3.repository.JointAccountRepository;
+import br.uefs.pbl_redes_3.repository.PrivateAccountRepository;
 import br.uefs.pbl_redes_3.repository.TokenRepository;
 import br.uefs.pbl_redes_3.request.LoginRequest;
 import br.uefs.pbl_redes_3.response.LoginResponse;
@@ -23,32 +27,79 @@ public class TokenService {
     private final ClientRepository clientRepository;
     private final TokenRepository tokenRepository;
     private final ModelMapper modelMapper;
+    private final PrivateAccountRepository privateAccountRepository;
+    private final JointAccountRepository jointAccountRepository;
 
-    public TokenService(final ClientRepository clientRepository, final TokenRepository tokenRepository, final ModelMapper modelMapper) {
+    public TokenService(final ClientRepository clientRepository,
+                        final TokenRepository tokenRepository,
+                        final ModelMapper modelMapper,
+                        final PrivateAccountRepository privateAccountRepository,
+                        final JointAccountRepository jointAccountRepository) {
         this.clientRepository = clientRepository;
         this.tokenRepository = tokenRepository;
         this.modelMapper = modelMapper;
+        this.privateAccountRepository = privateAccountRepository;
+        this.jointAccountRepository = jointAccountRepository;
     }
 
 
-    public LoginResponse create(LoginRequest request) {
-        Optional<ClientModel> expectedClient = clientRepository.findByEmail(request.getEmail());
-        if (expectedClient.isPresent()) {
-            ClientModel client = expectedClient.get();
-            if (authenticate(client, request)) {
-                TokenModel token = new TokenModel();
-                Date currentDate = new Date();
-                token.setClientId(client.getId());
-                token.setIssuedAt(currentDate);
-                token.setExpiresAt(currentDate.getTime() + 500000000);
-                token.setToken(generateToken());
-                tokenRepository.save(token);
-                return modelMapper.map(token, LoginResponse.class);
-            } else {
-                throw new RegisterException(HttpStatus.UNAUTHORIZED, "NOT AUTHENTICATED");
+    public LoginResponse createPrivateAccountToken(LoginRequest request) {
+        int clientCpf = Integer.parseInt(request.getCpf());
+        int accountNumber = Integer.parseInt(request.getNumberAccount());
+        Optional<ClientModel> clientOptional = clientRepository.findByCpf(clientCpf);
+        if (clientOptional.isPresent()) {
+            ClientModel client = clientOptional.get();
+            Optional<PrivateAccountModel> accountOptional = privateAccountRepository.findByAccountNumber(accountNumber);
+            if(accountOptional.isPresent()){
+                PrivateAccountModel privateAccount = accountOptional.get();
+                if (authenticate(client,privateAccount, request)) {
+                    TokenModel token = new TokenModel();
+                    Date currentDate = new Date();
+                    token.setClientId(client.getId());
+                    token.setAccountId(privateAccount.getId());
+                    token.setIssuedAt(currentDate);
+                    token.setExpiresAt(currentDate.getTime() + 500000000);
+                    token.setToken(generateToken());
+                    tokenRepository.save(token);
+                    return modelMapper.map(token, LoginResponse.class);
+                } else {
+                    throw new RequestException(HttpStatus.UNAUTHORIZED, "NOT AUTHENTICATED");
+                }
+            }else{
+                throw new RequestException(HttpStatus.NOT_FOUND,"PRIVATE ACCOUNT");
             }
         } else {
-            throw new RegisterException(HttpStatus.NOT_FOUND, "CLIENT");
+            throw new RequestException(HttpStatus.NOT_FOUND, "CLIENT");
+        }
+    }
+
+    public LoginResponse createJointAccountToken(LoginRequest request) {
+        int clientCpf = Integer.parseInt(request.getCpf());
+        int accountNumber = Integer.parseInt(request.getNumberAccount());
+        Optional<ClientModel> clientOptional = clientRepository.findByCpf(clientCpf);
+        if (clientOptional.isPresent()) {
+            ClientModel client = clientOptional.get();
+            Optional<JointAccountModel> accountOptional = jointAccountRepository.findByAccountNumber(accountNumber);
+            if(accountOptional.isPresent()){
+                JointAccountModel jointAccount = accountOptional.get();
+                if (authenticate(client,jointAccount, request)) {
+                    TokenModel token = new TokenModel();
+                    Date currentDate = new Date();
+                    token.setClientId(client.getId());
+                    token.setAccountId(jointAccount.getId());
+                    token.setIssuedAt(currentDate);
+                    token.setExpiresAt(currentDate.getTime() + 500000000);
+                    token.setToken(generateToken());
+                    tokenRepository.save(token);
+                    return modelMapper.map(token, LoginResponse.class);
+                } else {
+                    throw new RequestException(HttpStatus.UNAUTHORIZED, "NOT AUTHENTICATED");
+                }
+            }else{
+                throw new RequestException(HttpStatus.NOT_FOUND,"PRIVATE ACCOUNT");
+            }
+        } else {
+            throw new RequestException(HttpStatus.NOT_FOUND, "CLIENT");
         }
     }
 
@@ -66,14 +117,22 @@ public class TokenService {
             while (hashText.length() < 32) {
                 hashText = "0" + hashText;
             }
-            token = new String(hashText);
+            token = hashText;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
         return token;
     }
 
-    private boolean authenticate(ClientModel client, LoginRequest request) {
-        return client.getEmail().equals(request.getEmail()) && client.getPassword().equals(request.getPassword());
+    private boolean authenticate(ClientModel client, PrivateAccountModel privateAccount, LoginRequest request) {
+        return client.getCpf() == Integer.parseInt(request.getCpf())
+                && client.getPassword().equals(request.getPassword())
+                && privateAccount.getAccountNumber() == Integer.parseInt(request.getNumberAccount());
+    }
+
+    private boolean authenticate(ClientModel client, JointAccountModel jointAccount, LoginRequest request) {
+        return client.getCpf() == Integer.parseInt(request.getCpf())
+                && client.getPassword().equals(request.getPassword())
+                && jointAccount.getAccountNumber() == Integer.parseInt(request.getNumberAccount());
     }
 }

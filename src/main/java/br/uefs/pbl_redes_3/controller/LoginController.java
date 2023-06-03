@@ -5,10 +5,11 @@ import br.uefs.pbl_redes_3.response.LoginResponse;
 import br.uefs.pbl_redes_3.service.TokenService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-
+@RequestMapping("/login")
 public class LoginController {
     private final TokenService tokenService;
 
@@ -16,8 +17,13 @@ public class LoginController {
         this.tokenService = tokenService;
     }
 
-    @PostMapping("/login")
-    public LoginResponse create(@RequestBody final LoginRequest request){
-        return tokenService.create(request);
+    @PostMapping("/private_account")
+    public LoginResponse createPrivateAccountToken(@RequestBody final LoginRequest request){
+        return tokenService.createPrivateAccountToken(request);
+    }
+
+    @PostMapping("/joint_account")
+    public LoginResponse createJointAccountToken(@RequestBody final LoginRequest request){
+        return tokenService.createJointAccountToken(request);
     }
 }

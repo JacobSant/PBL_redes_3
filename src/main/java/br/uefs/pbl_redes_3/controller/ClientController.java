@@ -3,7 +3,6 @@ package br.uefs.pbl_redes_3.controller;
 import br.uefs.pbl_redes_3.request.ClientRequest;
 import br.uefs.pbl_redes_3.response.ClientResponse;
 import br.uefs.pbl_redes_3.service.ClientService;
-import br.uefs.pbl_redes_3.utils.Mapper;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +23,6 @@ public class ClientController {
 
     @GetMapping()
     public ClientResponse findByEmail(@RequestParam("email") final String email){
-        System.out.println(email);
         return clientService.findByEmail(email);
     }
 }

@@ -5,11 +5,11 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 @Getter
 @Setter
-public class RegisterException extends RuntimeException{
+public class RequestException extends RuntimeException{
     private HttpStatus status;
     private String reason;
 
-    public RegisterException(HttpStatus status, String reason) {
+    public RequestException(HttpStatus status, String reason) {
         this.status = status;
         this.reason = reason;
     }
