@@ -49,7 +49,7 @@ public class JointAccountRepository implements IRepository<JointAccountModel, UU
 
     @Override
     public Optional<JointAccountModel> findById(UUID uuid) {
-        return jointAccounts.stream().filter(acc -> acc.getBankId() == uuid).findFirst();
+        return jointAccounts.stream().filter(acc -> acc.getId() == uuid).findFirst();
     }
 
     @Override
