@@ -1,12 +1,19 @@
 package br.uefs.pbl_redes_3.utils;
 
+import br.uefs.pbl_redes_3.model.Bank;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OtherBanks {
-    private static Map<Integer,Integer> banksReference = new HashMap<>();
+    private static List<Bank> banksReference;
 
-    public synchronized static Map<Integer, Integer> getBanksReference() {
+    public void setBanks(){
+        banksReference.add(new Bank(0001,2000, "localhost"));
+        banksReference.add(new Bank(0002,3000, "localhost"));
+    }
+    public synchronized static List<Bank> getBanksReference() {
         return banksReference;
     }
 

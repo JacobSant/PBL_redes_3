@@ -1,6 +1,7 @@
 package br.uefs.pbl_redes_3.service;
 
 import br.uefs.pbl_redes_3.exception.RequestException;
+import br.uefs.pbl_redes_3.model.Bank;
 import br.uefs.pbl_redes_3.model.PrivateAccountModel;
 import br.uefs.pbl_redes_3.model.TokenModel;
 import br.uefs.pbl_redes_3.repository.PrivateAccountRepository;
@@ -61,9 +62,9 @@ public class PrivateAccountPaymentService {
                     }
                 } else {
                     RestTemplate httpRequest = new RestTemplate();
-                    if (OtherBanks.getBanksReference().containsKey(request.getDestinyBankId())) {
-                        Integer BankServerPort = OtherBanks.getBanksReference().get(request.getDestinyBankId());
-                        return httpRequest.postForObject("localhost://" + BankServerPort, request, PaymentResponse.class);
+                    if (OtherBanks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getDestinyBankId())) {
+                        Bank bank = OtherBanks.getBanksReference().stream().filter(b -> b.getId() == request.getDestinyBankId()).findFirst().get();
+                        return httpRequest.postForObject(bank.getIp()+"://"+ bank.getPort(), request, PaymentResponse.class);
                     }else{
                         throw new RequestException(HttpStatus.BAD_REQUEST, "INVALID BANK ID");
                     }
