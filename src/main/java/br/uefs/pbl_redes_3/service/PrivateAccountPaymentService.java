@@ -42,8 +42,11 @@ public class PrivateAccountPaymentService {
         if (tokenOptional.isPresent()) {
             TokenModel tokenModel = tokenOptional.get();
             Date currentDate = new Date();
+
             if (currentDate.getTime() < tokenModel.getExpiresAt()) {
-                if (request.getDestinyBankId() == bankId) {
+
+                //
+                if (request.getSourceBankId() == bankId && request.getDestinyBankId() == bankId) {
                     Optional<PrivateAccountModel> sourcePrivateAccountOptional = privateAccountRepository.findById(tokenModel.getAccountId());
                     Optional<PrivateAccountModel> destinyPrivateAccountOptional = privateAccountRepository.findByAccountNumber(request.getDestinyPrivateAccountNumber());
                     if (sourcePrivateAccountOptional.isPresent() && destinyPrivateAccountOptional.isPresent()) {
@@ -60,20 +63,35 @@ public class PrivateAccountPaymentService {
                     } else {
                         throw new RequestException(HttpStatus.NOT_FOUND, "PRIVATE ACCOUNT");
                     }
-                } else {
-                    RestTemplate httpRequest = new RestTemplate();
-                    if (OtherBanks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getDestinyBankId())) {
-                        Bank bank = OtherBanks.getBanksReference().stream().filter(b -> b.getId() == request.getDestinyBankId()).findFirst().get();
-                        return httpRequest.postForObject(bank.getIp()+"://"+ bank.getPort(), request, PaymentResponse.class);
-                    }else{
-                        throw new RequestException(HttpStatus.BAD_REQUEST, "INVALID BANK ID");
+                }
+                //
+                else if (request.getSourceBankId() != bankId && request.getDestinyBankId() == bankId) {
+                    Optional<PrivateAccountModel> destinyPrivateAccountOptional = privateAccountRepository.findByAccountNumber(request.getDestinyPrivateAccountNumber());
+                    if (destinyPrivateAccountOptional.isPresent()) {
+                        PrivateAccountModel destinyPrivateAccount = destinyPrivateAccountOptional.get();
+                        destinyPrivateAccount.setBalance(destinyPrivateAccount.getBalance() + request.getValue());
+
+                        return modelMapper.map(privateAccountRepository.update(destinyPrivateAccount), PaymentResponse.class);
+                    } else {
+                        throw new RequestException(HttpStatus.NOT_FOUND, "PRIVATE ACCOUNT");
+                    }
+                } //
+                else if (request.getSourceBankId() == bankId && request.getDestinyBankId() != bankId) {
+                    Optional<PrivateAccountModel> sourcePrivateAccountOptional = privateAccountRepository.findById(tokenModel.getAccountId());
+                    if(sourcePrivateAccountOptional.isPresent()){
+                        RestTemplate httpRequest = new RestTemplate();
+                        if (OtherBanks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getDestinyBankId())) {
+                            Bank bank = OtherBanks.getBanksReference().stream().filter(b -> b.getId() == request.getDestinyBankId()).findFirst().get();
+                            return httpRequest.postForObject(bank.getIp() + "://" + bank.getPort() + "/bank_transfer", request, PaymentResponse.class);
+                        } else {
+                            throw new RequestException(HttpStatus.BAD_REQUEST, "INVALID BANK ID");
+                        }
                     }
                 }
+
             } else {
                 throw new RequestException(HttpStatus.UNAUTHORIZED, "ACCESS TOKEN EXPIRED");
             }
-        } else {
-            throw new RequestException(HttpStatus.FORBIDDEN, "INVALID TOKEN");
         }
     }
 }

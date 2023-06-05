@@ -2,7 +2,9 @@ package br.uefs.pbl_redes_3.controller;
 
 import br.uefs.pbl_redes_3.exception.RequestException;
 import br.uefs.pbl_redes_3.request.PaymentRequest;
+import br.uefs.pbl_redes_3.request.PrivateAccountRequest;
 import br.uefs.pbl_redes_3.response.PaymentResponse;
+import br.uefs.pbl_redes_3.response.PrivateAccountResponse;
 import br.uefs.pbl_redes_3.service.PrivateAccountPaymentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +31,11 @@ public class PrivateAccountPaymentController {
             throw new RequestException(HttpStatus.FORBIDDEN,"ACCESS TOKEN NOT FOUND");
         }
         return privateAccountPaymentService.create(request,token);
+    }
+
+    @PostMapping("/bank_payment")
+    public PrivateAccountResponse solicitationTransfer(@RequestBody final PrivateAccountRequest privateAccountRequest){
+        return privateAccountPaymentService.create(privateAccountRequest);
     }
 
 }

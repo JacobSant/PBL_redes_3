@@ -9,4 +9,6 @@ public class PaymentRequest {
     private int destinyBankId;
     private int destinyPrivateAccountNumber;
     private int value;
+    private int sourceBankId;
+
 }

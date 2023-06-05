@@ -58,17 +58,6 @@ public class Synchronizer {
         Synchronizer.listTransactions = listTransactions;
     }
 
-    public void receivedACK(TransactionModel transaction){
-        listTransactions.forEach(t ->{
-            if(t.getIdTransaction() == transaction.getIdTransaction()){
-                t.setAck(t.getAck()+1);
-            }
-            if(t.getAck() == OtherBanks.getBanksReference().size()){
-                listTransactions.remove(t);
-                listTransactions.contains(t);
-            }
-        });
-    }
 
     public void incrementClock(){
         clockLogic++;
