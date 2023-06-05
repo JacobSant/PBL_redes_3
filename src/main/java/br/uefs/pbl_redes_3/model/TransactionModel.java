@@ -1,11 +1,16 @@
 package br.uefs.pbl_redes_3.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
-public class TransactionModel extends OperationModel{
+@AllArgsConstructor
+public class TransactionModel{
+    private UUID idTransaction;
     private int requestTime;
-    private boolean freeForExecution;
+    private int ack;
 }

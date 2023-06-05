@@ -1,43 +1,76 @@
 package br.uefs.pbl_redes_3.utils;
 
+import br.uefs.pbl_redes_3.exception.RequestException;
 import br.uefs.pbl_redes_3.model.Bank;
+import br.uefs.pbl_redes_3.model.OperationModel;
 import br.uefs.pbl_redes_3.model.TransactionModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Comparator;
 import java.util.LinkedList;
-
-@Getter
+import java.util.UUID;
+@Component
 public class Synchronizer {
     private static int clockLogic = 0;
     private static LinkedList<TransactionModel> listTransactions;
 
-    public void ajustClockLogic(TransactionModel transaction){
-        clockLogic++;
-        if(transaction.getRequestTime() >= clockLogic){
-            clockLogic = transaction.getRequestTime() +1;
-        }
-        listTransactions.add(transaction);
-        sortList();
+    public int getClockLogic(){
+        return clockLogic;
     }
 
-    private void sortList(){
-        listTransactions.sort(Comparator.comparingInt(TransactionModel::getRequestTime));
+    public LinkedList<TransactionModel> getListTransactions() {
+        return listTransactions;
     }
 
-    public void ajustListTrasactions(){
+
+    public void send(OperationModel operation){
+        UUID id = UUID.nameUUIDFromBytes((operation.getSourceBank().getBankId().toString()+
+                operation.getDate().toString()+
+                operation.getSourceClient().getId().toString()).getBytes());
+        TransactionModel transaction = new TransactionModel(id, ++clockLogic,  0);
+
         final RestTemplate request = new RestTemplate();
         OtherBanks.getBanksReference().forEach(t -> {
             Gson gson = new Gson();
-            String message = gson.toJson(listTransactions);
-            ResponseEntity<String> response = request.postForEntity(t.getIp() +"://"+t.getPort(), message, String.class);
-            if(response.getStatusCode().value() == 200){
+            String message = gson.toJson(transaction);
+            ResponseEntity<String> response = request.postForEntity(t.getIp() +"://"+t.getPort()+"/request", message, String.class);
+            if(response.getStatusCode().value() != 200){
+                throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, "Algum servidor não recebeu");
+            }
+        }
+        );
 
+        while(listTransactions.contains(transaction)){}
+
+    }
+
+    public void setClockLogic(int clockLogic) {
+        Synchronizer.clockLogic = clockLogic;
+    }
+
+    public void setListTransactions(LinkedList<TransactionModel> listTransactions) {
+        Synchronizer.listTransactions = listTransactions;
+    }
+
+    public void receivedACK(TransactionModel transaction){
+        listTransactions.forEach(t ->{
+            if(t.getIdTransaction() == transaction.getIdTransaction()){
+                t.setAck(t.getAck()+1);
+            }
+            if(t.getAck() == OtherBanks.getBanksReference().size()){
+                listTransactions.remove(t);
+                listTransactions.contains(t);
             }
         });
+    }
+
+    public void incrementClock(){
+        clockLogic++;
     }
 }

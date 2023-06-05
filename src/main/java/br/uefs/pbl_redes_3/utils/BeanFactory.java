@@ -16,4 +16,7 @@ public class BeanFactory {
         return new ModelMapper();
     }
 
+    @Bean
+    public Synchronizer synchronizer(){ return new Synchronizer();}
+
 }

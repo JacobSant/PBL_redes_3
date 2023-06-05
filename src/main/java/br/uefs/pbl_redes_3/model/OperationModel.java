@@ -13,4 +13,5 @@ public abstract class OperationModel {
     protected ClientReferenceModel sourceClient;
     protected ClientReferenceModel destinyClient;
     protected LocalDateTime date;
+    protected BankReferenceModel sourceBank;
 }
