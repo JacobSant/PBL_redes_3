@@ -3,7 +3,6 @@ package br.uefs.pbl_redes_3.service;
 import br.uefs.pbl_redes_3.exception.RequestException;
 import br.uefs.pbl_redes_3.model.Bank;
 import br.uefs.pbl_redes_3.model.TokenModel;
-import br.uefs.pbl_redes_3.model.TransfersModel;
 import br.uefs.pbl_redes_3.repository.TokenRepository;
 import br.uefs.pbl_redes_3.request.TransferRequest;
 import br.uefs.pbl_redes_3.response.TransferResponse;

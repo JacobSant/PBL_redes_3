@@ -6,7 +6,9 @@ import br.uefs.pbl_redes_3.request.PaymentRequest;
 import br.uefs.pbl_redes_3.response.PaymentResponse;
 import br.uefs.pbl_redes_3.utils.Banks;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PrivateAccountPaymentService {
     private final TokenRepository tokenRepository;
     private final ModelMapper modelMapper;
