@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 
 public abstract class OperationModel {
     protected double value;
-    protected BankReferenceModel destinyBank;
-    protected ClientReferenceModel sourceClient;
-    protected ClientReferenceModel destinyClient;
+    protected Bank sourceBank;
+    protected Bank destinyBank;
+    protected int sourceAccountNumber;
+    protected int destinyAccountNumber;
     protected LocalDateTime date;
-    protected BankReferenceModel sourceBank;
 }

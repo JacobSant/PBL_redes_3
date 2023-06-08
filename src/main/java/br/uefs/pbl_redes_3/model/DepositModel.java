@@ -7,11 +7,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class DepositModel {
-
     private double value;
-    private BankReferenceModel sourceBank;
-    private BankReferenceModel destinyBank;
-    private ClientReferenceModel sourceClient;
-    private ClientReferenceModel destinyClient;
     private LocalDateTime date;
 }
+

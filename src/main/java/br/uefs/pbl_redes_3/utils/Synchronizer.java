@@ -1,42 +1,37 @@
 package br.uefs.pbl_redes_3.utils;
 
 import br.uefs.pbl_redes_3.exception.RequestException;
-import br.uefs.pbl_redes_3.model.Bank;
 import br.uefs.pbl_redes_3.model.OperationModel;
 import br.uefs.pbl_redes_3.model.TransactionModel;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.UUID;
 @Component
 public class Synchronizer {
     private static int clockLogic = 0;
     private static LinkedList<TransactionModel> listTransactions;
+    private final Banks banks;
 
-    public int getClockLogic(){
-        return clockLogic;
+    public Synchronizer(){
+        this.banks = new Banks();
     }
 
-    public LinkedList<TransactionModel> getListTransactions() {
-        return listTransactions;
+    public void incrementClock(){
+        ++clockLogic;
     }
-
-
-    public void send(OperationModel operation){
-        UUID id = UUID.nameUUIDFromBytes((operation.getSourceBank().getBankId().toString()+
-                operation.getDate().toString()+
-                operation.getSourceClient().getId().toString()).getBytes());
-        TransactionModel transaction = new TransactionModel(id, ++clockLogic,  0);
+    public void send(int sourceAccount, int sourceBank){
+        incrementClock();
+        UUID id = UUID.nameUUIDFromBytes(Integer.toString(sourceBank + clockLogic +
+                sourceAccount).getBytes());
+        TransactionModel transaction = new TransactionModel(id, clockLogic,  0);
 
         final RestTemplate request = new RestTemplate();
-        OtherBanks.getBanksReference().forEach(t -> {
+        banks.getBanksReference().forEach(t -> {
             Gson gson = new Gson();
             String message = gson.toJson(transaction);
             ResponseEntity<String> response = request.postForEntity(t.getIp() +"://"+t.getPort()+"/request", message, String.class);
@@ -58,8 +53,12 @@ public class Synchronizer {
         Synchronizer.listTransactions = listTransactions;
     }
 
-
-    public void incrementClock(){
-        clockLogic++;
+    public int getClockLogic(){
+        return clockLogic;
     }
+
+    public LinkedList<TransactionModel> getListTransactions() {
+        return listTransactions;
+    }
+
 }

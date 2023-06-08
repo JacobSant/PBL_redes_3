@@ -1,8 +1,7 @@
 package br.uefs.pbl_redes_3.service;
 
 import br.uefs.pbl_redes_3.model.TransactionModel;
-import br.uefs.pbl_redes_3.utils.BeanFactory;
-import br.uefs.pbl_redes_3.utils.OtherBanks;
+import br.uefs.pbl_redes_3.utils.Banks;
 import br.uefs.pbl_redes_3.utils.Synchronizer;
 import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +14,11 @@ import java.util.Comparator;
 public class RequestService {
     private final Synchronizer synchronizer;
 
-    public RequestService(Synchronizer synchronizer) {
+    private final Banks banks;
+
+    public RequestService(Synchronizer synchronizer, Banks banks) {
         this.synchronizer = synchronizer;
+        this.banks = banks;
     }
 
     private void sortList(){
@@ -35,10 +37,10 @@ public class RequestService {
 
     public void returnACK(TransactionModel transaction){
         final RestTemplate request = new RestTemplate();
-        OtherBanks.getBanksReference().forEach(t -> {
+        banks.getBanksReference().forEach(t -> {
             Gson gson = new Gson();
             String message = gson.toJson(transaction);
-            ResponseEntity<String> response = request.postForEntity(t.getIp() +"://"+t.getPort()+"/ack", message, String.class);
+            request.postForEntity(t.getIp() +"://"+t.getPort()+"/ack", message, String.class);
         });
     }
 }
