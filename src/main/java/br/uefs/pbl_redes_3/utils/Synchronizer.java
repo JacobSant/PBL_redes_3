@@ -41,7 +41,7 @@ public class Synchronizer {
         }
         );
 
-        while(listTransactions.contains(transaction)){}
+        while(listTransactions.contains(transaction));
 
     }
 

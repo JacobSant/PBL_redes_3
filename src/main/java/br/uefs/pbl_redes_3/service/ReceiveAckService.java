@@ -19,10 +19,11 @@ public class ReceiveAckService {
             if(t.getIdTransaction() == transaction.getIdTransaction()){
                 t.setAck(t.getAck()+1);
             }
-            if(t.getAck() == banks.getBanksReference().size()){
-                synchronizer.getListTransactions().remove(t);
-            }
         });
+
+        if(synchronizer.getListTransactions().getFirst().getAck() == banks.getBanksReference().size()){
+            synchronizer.getListTransactions().removeFirst();
+        }
     }
 
 }
