@@ -8,5 +8,4 @@ public class PblRedes3Application {
 	public static void main(String[] args) {
 		SpringApplication.run(PblRedes3Application.class, args);
 	}
-
 }

@@ -21,10 +21,8 @@ public class RequestController {
     }
 
     @PostMapping()
-    public String receive(@RequestBody String request){
-        Gson gson = new Gson();
-        TransactionModel transactionModel = gson.fromJson(request, TransactionModel.class);
-        requestService.receive(transactionModel);
+    public String receive(@RequestBody TransactionModel request){
+        requestService.receive(request);
         return "";
     }
 }

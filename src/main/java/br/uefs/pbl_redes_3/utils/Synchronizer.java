@@ -9,12 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.UUID;
 @Component
 public class Synchronizer {
     private static int clockLogic = 0;
-    private static LinkedList<TransactionModel> listTransactions;
+    private static LinkedList<TransactionModel> listTransactions = new LinkedList<>();
     private final Banks banks;
 
     public Synchronizer(){
@@ -31,15 +33,24 @@ public class Synchronizer {
         TransactionModel transaction = new TransactionModel(id, clockLogic,  0);
 
         final RestTemplate request = new RestTemplate();
-        banks.getBanksReference().forEach(t -> {
-            Gson gson = new Gson();
-            String message = gson.toJson(transaction);
-            ResponseEntity<String> response = request.postForEntity(t.getIp() +"://"+t.getPort()+"/request", message, String.class);
-            if(response.getStatusCode().value() != 200){
-                throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, "Algum servidor não recebeu");
-            }
+        try{
+            banks.getBanksReference().forEach(t -> {
+                        Gson gson = new Gson();
+                        String message = gson.toJson(transaction);
+                        String url ="http://"+ t.getIp() +":"+t.getPort()+"/request";
+
+                        System.out.println(url);
+                        ResponseEntity<TransactionModel> response = request.postForEntity(url, transaction, TransactionModel.class);
+                        if(response.getStatusCode().value() != 200){
+                            throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, "Algum servidor não recebeu");
+                        }
+                    }
+            );
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new RuntimeException(e);
+
         }
-        );
 
         while(listTransactions.contains(transaction));
 

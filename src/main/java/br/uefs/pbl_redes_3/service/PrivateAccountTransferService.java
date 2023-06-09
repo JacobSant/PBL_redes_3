@@ -34,13 +34,13 @@ public class PrivateAccountTransferService {
             TokenModel tokenModel = tokenOptional.get();
             Date currentDate = new Date();
             if (currentDate.getTime() < tokenModel.getExpiresAt()) {
-
                 synchronizer.send(request.getSourcePrivateAccountNumber(), request.getSourceBankId());
                 RestTemplate httpRequest = new RestTemplate();
                 if (banks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getSourceBankId())) {
                     Bank bank = banks.getBanksReference().stream()
                             .filter(b -> b.getId() == request.getSourceBankId()).findFirst().get();
-                    ResponseEntity<TransferResponse> response = httpRequest.postForEntity(bank.getIp() + "://" + bank.getPort() + "/pass_transfer/private_account", request, TransferResponse.class);
+                    String url ="http://"+ bank.getIp()  +":" +  bank.getPort()+ "/pass_transfer/private_account";
+                    ResponseEntity<TransferResponse> response = httpRequest.postForEntity(url, request, TransferResponse.class);
                     if (response.getStatusCodeValue() == 200) {
                         return response.getBody();
                     } else {

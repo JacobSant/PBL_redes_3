@@ -74,7 +74,8 @@ public class BankTransferService {
                 RestTemplate httpRequest = new RestTemplate();
                 if (banks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getDestinyBankId())) {
                     Bank bank = banks.getBanksReference().stream().filter(b -> b.getId() == request.getDestinyBankId()).findFirst().get();
-                    ResponseEntity<String> response = httpRequest.postForEntity(bank.getIp() + "://" + bank.getPort() + "/pass_transfer/private_account", request, String.class);
+                    String url ="http://"+ bank.getIp()  + ":"+ bank.getPort() + "/pass_transfer/private_account";
+                    ResponseEntity<String> response = httpRequest.postForEntity(url, request, String.class);
                     if (response.getStatusCodeValue() == 200) {
                        // Salvar tranferência no repositório
                         // Mudar retorno. model mapper receberá uma representação da tranferência e não da conta

@@ -7,16 +7,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Initializer implements ApplicationRunner {
-    @Value("${bank.id}")
-    private int bankId;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Banks banks = new Banks();
         banks.initializeBanks();
         banks.getBanksReference().forEach(
-                b -> System.out.println(b.getId())
+                b -> System.out.println(b.getId() +"\n"+b.getPort()+"\n"+b.getIp())
         );
-        System.out.println(bankId);
+
     }
 }
