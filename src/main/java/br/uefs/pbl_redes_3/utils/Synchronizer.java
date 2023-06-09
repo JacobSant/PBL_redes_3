@@ -1,7 +1,6 @@
 package br.uefs.pbl_redes_3.utils;
 
 import br.uefs.pbl_redes_3.exception.RequestException;
-import br.uefs.pbl_redes_3.model.OperationModel;
 import br.uefs.pbl_redes_3.model.TransactionModel;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
@@ -9,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.UUID;
 @Component
@@ -19,8 +16,8 @@ public class Synchronizer {
     private static LinkedList<TransactionModel> listTransactions = new LinkedList<>();
     private final Banks banks;
 
-    public Synchronizer(){
-        this.banks = new Banks();
+    public Synchronizer(Banks banks){
+        this.banks = banks;
     }
 
     public void incrementClock(){
