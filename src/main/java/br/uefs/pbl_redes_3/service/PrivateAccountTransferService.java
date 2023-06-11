@@ -7,6 +7,7 @@ import br.uefs.pbl_redes_3.repository.TokenRepository;
 import br.uefs.pbl_redes_3.request.TransferRequest;
 import br.uefs.pbl_redes_3.response.TransferResponse;
 import br.uefs.pbl_redes_3.utils.Banks;
+import br.uefs.pbl_redes_3.utils.RestTemplateResponseExceptionHandler;
 import br.uefs.pbl_redes_3.utils.Synchronizer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,16 +38,14 @@ public class PrivateAccountTransferService {
             if (currentDate.getTime() < tokenModel.getExpiresAt()) {
                 synchronizer.send(request.getSourcePrivateAccountNumber(), request.getSourceBankId());
                 RestTemplate httpRequest = new RestTemplate();
+                httpRequest.setErrorHandler(new RestTemplateResponseExceptionHandler());
                 if (banks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getSourceBankId())) {
                     Bank bank = banks.getBanksReference().stream()
                             .filter(b -> b.getId() == request.getSourceBankId()).findFirst().get();
                     String url ="http://"+ bank.getIp()  +":" +  bank.getPort()+ "/pass_transfer/private_account";
                     ResponseEntity<TransferResponse> response = httpRequest.postForEntity(url, request, TransferResponse.class);
-                    if (response.getStatusCodeValue() == 200) {
-                        return response.getBody();
-                    } else {
-                        throw new RequestException(response.getStatusCode());
-                    }
+                    TransferResponse result = response.getBody();
+                    return result;
                 }
             } else {
                 throw new RequestException(HttpStatus.UNAUTHORIZED, "ACCESS TOKEN EXPIRED");

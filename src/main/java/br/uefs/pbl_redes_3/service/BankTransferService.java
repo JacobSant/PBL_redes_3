@@ -9,11 +9,14 @@ import br.uefs.pbl_redes_3.response.TransferResponse;
 import br.uefs.pbl_redes_3.utils.Banks;
 import br.uefs.pbl_redes_3.utils.PropertiesManager;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.Charset;
 import java.util.Optional;
 
 @Service
@@ -53,7 +56,7 @@ public class BankTransferService {
                     privateAccountRepository.update(destinyPrivateAccount);
                     return modelMapper.map(result.get(), TransferResponse.class);
                 } else {
-                    throw new RequestException(HttpStatus.UNAUTHORIZED, "INSUFFICIENT BALANCE");
+                    throw new RequestException(HttpStatus.UNAUTHORIZED,"INSUFICIENT BALANCE");
                 }
             } else {
                 throw new RequestException(HttpStatus.NOT_FOUND, "PRIVATE ACCOUNT");

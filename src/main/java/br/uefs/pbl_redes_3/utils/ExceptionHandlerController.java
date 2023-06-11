@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
@@ -15,4 +16,5 @@ public class ExceptionHandlerController {
         body.addProperty("reason",e.getReason());
         return ResponseEntity.status(e.getStatus()).body(body.toString());
     }
+
 }
