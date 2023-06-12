@@ -14,16 +14,18 @@ public class ReceiveAckService {
         this.synchronizer = synchronizer;
         this.banks = banks;
     }
-    public void receivedACK(TransactionModel transaction){
-        synchronizer.getListTransactions().forEach(t ->{
-            if(t.getIdTransaction() == transaction.getIdTransaction()){
-                t.setAck(t.getAck()+1);
-            }
-        });
 
-        if(synchronizer.getListTransactions().getFirst().getAck() == banks.getBanksReference().size()){
-            synchronizer.getListTransactions().removeFirst();
+    public void receivedACK(TransactionModel transaction) {
+        if (!synchronizer.getListTransactions().isEmpty()) {
+            synchronizer.getListTransactions().forEach(t -> {
+                if (t.getIdTransaction() == transaction.getIdTransaction()) {
+                    t.setAck(t.getAck() + 1);
+                }
+            });
+
+            if (synchronizer.getListTransactions().getFirst().getAck() == banks.getBanksReference().size()) {
+                synchronizer.getListTransactions().removeFirst();
+            }
         }
     }
-
 }

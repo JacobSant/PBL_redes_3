@@ -36,7 +36,7 @@ public class PrivateAccountTransferService {
             TokenModel tokenModel = tokenOptional.get();
             Date currentDate = new Date();
             if (currentDate.getTime() < tokenModel.getExpiresAt()) {
-                synchronizer.send(request.getSourcePrivateAccountNumber(), request.getSourceBankId());
+                //synchronizer.send(request.getSourcePrivateAccountNumber(), request.getSourceBankId());
                 RestTemplate httpRequest = new RestTemplate();
                 httpRequest.setErrorHandler(new RestTemplateResponseExceptionHandler());
                 if (banks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getSourceBankId())) {
