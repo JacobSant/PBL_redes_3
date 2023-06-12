@@ -24,19 +24,22 @@ public class PrivateAccountTransferService {
     private final Banks banks;
     private final Synchronizer synchronizer;
 
+
     public PrivateAccountTransferService(TokenRepository tokenRepository, Banks banks, Synchronizer synchronizer) {
         this.tokenRepository = tokenRepository;
         this.banks = banks;
         this.synchronizer = synchronizer;
     }
 
+
     public TransferResponse create(TransferRequest request, String token) {
+
         Optional<TokenModel> tokenOptional = tokenRepository.findByToken(token);
         if (tokenOptional.isPresent()) {
             TokenModel tokenModel = tokenOptional.get();
             Date currentDate = new Date();
             if (currentDate.getTime() < tokenModel.getExpiresAt()) {
-                //synchronizer.send(request.getSourcePrivateAccountNumber(), request.getSourceBankId());
+                synchronizer.send(request.getSourcePrivateAccountNumber(), request.getSourceBankId());
                 RestTemplate httpRequest = new RestTemplate();
                 httpRequest.setErrorHandler(new RestTemplateResponseExceptionHandler());
                 if (banks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getSourceBankId())) {
@@ -45,13 +48,32 @@ public class PrivateAccountTransferService {
                     String url ="http://"+ bank.getIp()  +":" +  bank.getPort()+ "/pass_transfer/private_account";
                     ResponseEntity<TransferResponse> response = httpRequest.postForEntity(url, request, TransferResponse.class);
                     TransferResponse result = response.getBody();
+                    finish();
                     return result;
                 }
             } else {
+                finish();
                 throw new RequestException(HttpStatus.UNAUTHORIZED, "ACCESS TOKEN EXPIRED");
             }
         }
-
+        finish();
         throw new RequestException(HttpStatus.FORBIDDEN, "INVALID TOKEN");
+    }
+
+    private void finish(){
+        final RestTemplate request = new RestTemplate();
+        try {
+            banks.getBanksReference().forEach(t -> {
+                        String url = "http://" + t.getIp() + ":" + t.getPort() + "/finish";
+                        ResponseEntity<Boolean> response = request.postForEntity(url,"" , Boolean.class);
+                        if (response.getStatusCode().value() != 200) {
+                            throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, "Algum servidor não recebeu");
+                        }
+                    }
+            );
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new RuntimeException(e);
+        }
     }
 }
