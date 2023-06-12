@@ -36,4 +36,5 @@ public class ClientService {
     public ClientResponse findByEmail(String email) {
         return modelMapper.map(clientRepository.findByEmail(email), ClientResponse.class);
     }
+
 }

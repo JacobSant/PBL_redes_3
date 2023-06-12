@@ -1,5 +1,6 @@
 package br.uefs.pbl_redes_3.repository;
 
+import br.uefs.pbl_redes_3.model.ClientModel;
 import br.uefs.pbl_redes_3.model.PrivateAccountModel;
 import org.springframework.stereotype.Repository;
 
@@ -50,7 +51,7 @@ public class PrivateAccountRepository implements IRepository<PrivateAccountModel
 
     @Override
     public Optional<PrivateAccountModel> findById(UUID uuid) {
-        return privateAccounts.stream().filter(acc -> acc.getId() == uuid).findFirst();
+        return privateAccounts.stream().filter(acc -> acc.getId().equals(uuid)).findFirst();
     }
 
     @Override
@@ -60,5 +61,9 @@ public class PrivateAccountRepository implements IRepository<PrivateAccountModel
 
     public Optional<PrivateAccountModel> findByAccountNumber(int accountNumber){
         return privateAccounts.stream().filter(acc -> acc.getAccountNumber() == accountNumber).findFirst();
+    }
+
+    public Optional<PrivateAccountModel> findByClientId(UUID clientId){
+        return privateAccounts.stream().filter(acc -> acc.getClientId().equals(clientId)).findFirst();
     }
 }

@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,11 +34,23 @@ public class PrivateAccountService {
 
     public PrivateAccountResponse create(PrivateAccountRequest request) {
         UUID uuid = UUID.fromString(request.getClientId());
-        if(clientRepository.contains(c -> c.getId().equals(uuid))){
-            PrivateAccountModel privateAccount = modelMapper.map(request,PrivateAccountModel.class);
+        if (clientRepository.contains(c -> c.getId().equals(uuid))) {
+            PrivateAccountModel privateAccount = modelMapper.map(request, PrivateAccountModel.class);
             privateAccount.setAccountNumber(numberAccountGenerator.create());
-            return modelMapper.map(privateAccountRepository.save(privateAccount),PrivateAccountResponse.class);
+            privateAccount.setClientId(uuid);
+
+            return modelMapper.map(privateAccountRepository.save(privateAccount), PrivateAccountResponse.class);
         }
         throw new RequestException(HttpStatus.NOT_FOUND, "CLIENT");
+    }
+
+    public PrivateAccountResponse findByClientID(UUID clientId) {
+        Optional<PrivateAccountModel> privateAccountOptional;
+        privateAccountOptional = privateAccountRepository.findByClientId(clientId);
+
+        if (privateAccountOptional.isPresent()) {
+            return modelMapper.map(privateAccountOptional.get(), PrivateAccountResponse.class);
+        }
+        throw new RequestException(HttpStatus.NOT_FOUND, "PrivateAccount");
     }
 }

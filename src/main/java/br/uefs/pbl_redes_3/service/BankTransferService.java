@@ -74,8 +74,9 @@ public class BankTransferService {
             Optional<PrivateAccountModel> destinyPrivateAccountOptional = privateAccountRepository.findByAccountNumber(request.getDestinyPrivateAccountNumber());
             if (destinyPrivateAccountOptional.isPresent()) {
                 PrivateAccountModel destinyPrivateAccount = destinyPrivateAccountOptional.get();
+                System.out.println(destinyPrivateAccount.getBalance());
                 destinyPrivateAccount.setBalance(destinyPrivateAccount.getBalance() + request.getValue());
-
+                System.out.println(destinyPrivateAccount.getBalance());
                 // Salvar transferência no repositório
                 // Mudar retorno. model mapper receberá uma representação da tranferência e não da conta
                 System.out.println("Linha 74 BankTransfer");

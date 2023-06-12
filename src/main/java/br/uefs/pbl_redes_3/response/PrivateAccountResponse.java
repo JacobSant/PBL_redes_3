@@ -9,4 +9,6 @@ import java.util.UUID;
 public class PrivateAccountResponse {
     private UUID id;
     private int accountNumber;
+    private double balance;
+    private UUID clientId;
 }
