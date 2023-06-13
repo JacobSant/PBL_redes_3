@@ -50,9 +50,7 @@ public class Synchronizer {
             throw new RuntimeException(e);
         }
 
-        while (!listTransactions.getFirst().equals(transaction) || !listTransactions.getFirst().isFreeForExecution()) ;
-
-
+        while (!listTransactions.getFirst().equals(transaction) || !listTransactions.getFirst().isExecutable()) ;
     }
 
     public void setClockLogic(int clockLogic) {

@@ -24,7 +24,7 @@ public class ReceiveAckService {
             });
 
             if (synchronizer.getListTransactions().getFirst().getAck() == banks.getBanksReference().size()) {
-                synchronizer.getListTransactions().getFirst().setFreeForExecution(true);
+                synchronizer.getListTransactions().getFirst().setExecutable(true);
             }
         }
     }

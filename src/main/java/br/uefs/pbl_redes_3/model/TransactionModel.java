@@ -13,5 +13,5 @@ public class TransactionModel{
     private UUID idTransaction;
     private int requestTime;
     private int ack;
-    private boolean freeForExecution;
+    private boolean executable;
 }
