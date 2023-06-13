@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ack")
 public class ReceiveAckController {
+
     private final ReceiveAckService receiveAckService;
 
     public ReceiveAckController(ReceiveAckService receiveAckService) {
@@ -19,6 +20,7 @@ public class ReceiveAckController {
 
     @PostMapping()
     public String receive(@RequestBody String request){
+        System.out.println( "Receive Ack Service");
         Gson gson = new Gson();
         TransactionModel transactionModel = gson.fromJson(request, TransactionModel.class);
         receiveAckService.receivedACK(transactionModel);

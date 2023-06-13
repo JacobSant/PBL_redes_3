@@ -18,11 +18,12 @@ public class ReceiveAckService {
     public void receivedACK(TransactionModel transaction) {
         if (!synchronizer.getListTransactions().isEmpty()) {
             synchronizer.getListTransactions().forEach(t -> {
-                if (t.getIdTransaction() == transaction.getIdTransaction()) {
+                if (t.getIdTransaction().equals(transaction.getIdTransaction())) {
                     t.setAck(t.getAck() + 1);
                 }
             });
-
+            System.out.println(banks.getBanksReference().size() + "   banks.getBanksReference().size()");
+            System.out.println(synchronizer.getListTransactions().getFirst().getAck() + "    synchronizer.getListTransactions().getFirst().getAck()");
             if (synchronizer.getListTransactions().getFirst().getAck() == banks.getBanksReference().size()) {
                 synchronizer.getListTransactions().getFirst().setExecutable(true);
             }

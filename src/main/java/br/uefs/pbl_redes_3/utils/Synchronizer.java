@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.SQLOutput;
 import java.util.LinkedList;
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ public class Synchronizer {
 
                         System.out.println(url);
                         ResponseEntity<TransactionModel> response = request.postForEntity(url, transaction, TransactionModel.class);
+                        System.out.println(response.getStatusCode().value());
                         if (response.getStatusCode().value() != 200) {
                             throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, "Algum servidor não recebeu");
                         }
@@ -50,7 +52,15 @@ public class Synchronizer {
             throw new RuntimeException(e);
         }
 
-        while (!listTransactions.getFirst().equals(transaction) || !listTransactions.getFirst().isExecutable()) ;
+        while (!listTransactions.getFirst().getIdTransaction().equals(transaction.getIdTransaction()) || !listTransactions.getFirst().isExecutable()) {
+            System.out.println(listTransactions.getFirst().getIdTransaction().equals(transaction.getIdTransaction()));
+            System.out.println(listTransactions.getFirst().equals(transaction));
+            System.out.println(listTransactions.getFirst().isExecutable());
+            System.out.println(listTransactions.size());
+            System.out.println(listTransactions.getFirst().getAck());
+            System.out.println("____________________________");
+        }
+        ;
     }
 
     public void setClockLogic(int clockLogic) {

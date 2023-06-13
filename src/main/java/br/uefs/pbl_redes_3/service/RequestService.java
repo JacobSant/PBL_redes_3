@@ -40,7 +40,9 @@ public class RequestService {
         banks.getBanksReference().forEach(t -> {
             Gson gson = new Gson();
             String message = gson.toJson(transaction);
-            request.postForEntity("http://"+t.getIp() +":"+t.getPort()+"/ack", message, String.class);
+            String url = "http://"+t.getIp() +":"+t.getPort()+"/ack";
+            System.out.println(url);
+            request.postForEntity(url, message, String.class);
         });
     }
 }
