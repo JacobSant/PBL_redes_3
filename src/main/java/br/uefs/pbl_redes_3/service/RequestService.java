@@ -30,8 +30,10 @@ public class RequestService {
         if(transaction.getRequestTime() >= synchronizer.getClockLogic()){
             synchronizer.setClockLogic(transaction.getRequestTime() +1);
         }
-        synchronizer.getListTransactions().add(transaction);
+        synchronizer.addTransaction(transaction);
         sortList();
+        System.out.println(synchronizer.getListTransactions().size() + "RequestService linha 35");
+
         returnACK(transaction);
     }
 

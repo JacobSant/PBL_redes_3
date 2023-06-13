@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class DepositRequest{
     private double value;
-    private int accountNumber;
 }

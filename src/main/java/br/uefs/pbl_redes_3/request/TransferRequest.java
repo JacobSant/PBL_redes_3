@@ -9,6 +9,6 @@ public class TransferRequest {
     private int destinyBankId;
     private int sourceBankId;
     private int destinyPrivateAccountNumber;
-    private int sourcePrivateAccountNumber;
     private int value;
+    private int cpf;
 }

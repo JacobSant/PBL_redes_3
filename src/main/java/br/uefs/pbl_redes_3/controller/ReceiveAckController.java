@@ -20,7 +20,6 @@ public class ReceiveAckController {
 
     @PostMapping()
     public String receive(@RequestBody String request){
-        System.out.println( "Receive Ack Service");
         Gson gson = new Gson();
         TransactionModel transactionModel = gson.fromJson(request, TransactionModel.class);
         receiveAckService.receivedACK(transactionModel);

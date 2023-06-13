@@ -27,39 +27,37 @@ public class Synchronizer {
     }
 
     public void send(int sourceAccount, int sourceBank) {
+        System.out.println("syncronize linha 30");
         incrementClock();
         UUID id = UUID.nameUUIDFromBytes(Integer.toString(sourceBank + clockLogic +
                 sourceAccount).getBytes());
         TransactionModel transaction = new TransactionModel(id, clockLogic, 0, false);
 
         final RestTemplate request = new RestTemplate();
-        try {
-            banks.getBanksReference().forEach(t -> {
-                        Gson gson = new Gson();
-                        String message = gson.toJson(transaction);
-                        String url = "http://" + t.getIp() + ":" + t.getPort() + "/request";
 
-                        System.out.println(url);
-                        ResponseEntity<TransactionModel> response = request.postForEntity(url, transaction, TransactionModel.class);
-                        System.out.println(response.getStatusCode().value());
-                        if (response.getStatusCode().value() != 200) {
-                            throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, "Algum servidor não recebeu");
-                        }
+        banks.getBanksReference().forEach(t -> {
+                    Gson gson = new Gson();
+                    String message = gson.toJson(transaction);
+                    String url = "http://" + t.getIp() + ":" + t.getPort() + "/request";
+
+                    System.out.println(url);
+                    ResponseEntity<TransactionModel> response = request.postForEntity(url, transaction, TransactionModel.class);
+                    System.out.println(response.getStatusCode().value());
+                    if (response.getStatusCode().value() != 200) {
+                        throw new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, "Algum servidor não recebeu");
                     }
-            );
-        } catch (Exception e) {
-            System.out.println(e);
-            throw new RuntimeException(e);
-        }
+                }
+        );
+        System.out.println(listTransactions.getFirst().getIdTransaction().equals(transaction.getIdTransaction()));
+        System.out.println(listTransactions.getFirst().equals(transaction));
+        System.out.println(listTransactions.getFirst().isExecutable());
+        System.out.println(listTransactions.size());
+        System.out.println(listTransactions.getFirst().getAck());
+        System.out.println("____________________________");
+        while (!listTransactions.getFirst().getIdTransaction().equals(transaction.getIdTransaction()) || !listTransactions.getFirst().isExecutable() ) {
 
-        while (!listTransactions.getFirst().getIdTransaction().equals(transaction.getIdTransaction()) || !listTransactions.getFirst().isExecutable()) {
-            System.out.println(listTransactions.getFirst().getIdTransaction().equals(transaction.getIdTransaction()));
-            System.out.println(listTransactions.getFirst().equals(transaction));
-            System.out.println(listTransactions.getFirst().isExecutable());
-            System.out.println(listTransactions.size());
-            System.out.println(listTransactions.getFirst().getAck());
-            System.out.println("____________________________");
         }
+        System.out.println("syncronize linha 62");
         ;
     }
 
@@ -71,6 +69,9 @@ public class Synchronizer {
         Synchronizer.listTransactions = listTransactions;
     }
 
+    public synchronized void addTransaction(TransactionModel transactionModel){
+        this.listTransactions.add(transactionModel);
+    }
     public int getClockLogic() {
         return clockLogic;
     }
@@ -80,7 +81,9 @@ public class Synchronizer {
     }
 
     public Boolean finish() {
+        System.out.println(listTransactions.size() + "syncronize linha 83");
         listTransactions.removeFirst();
+        System.out.println(listTransactions.size() + "syncronize linha 85");
         return true;
     }
 

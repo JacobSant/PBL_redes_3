@@ -16,5 +16,4 @@ public class ExceptionHandlerController {
         body.addProperty("reason",e.getReason());
         return ResponseEntity.status(e.getStatus()).body(body.toString());
     }
-
 }

@@ -16,15 +16,18 @@ public class ReceiveAckService {
     }
 
     public void receivedACK(TransactionModel transaction) {
+        System.out.println(synchronizer.getListTransactions().size() + "Receive Ack Service linha 19");
         if (!synchronizer.getListTransactions().isEmpty()) {
+
             synchronizer.getListTransactions().forEach(t -> {
                 if (t.getIdTransaction().equals(transaction.getIdTransaction())) {
                     t.setAck(t.getAck() + 1);
                 }
             });
-            System.out.println(banks.getBanksReference().size() + "   banks.getBanksReference().size()");
+            System.out.println(banks.getBanksReference().size() + "   ReceiveAck linha 25");
             System.out.println(synchronizer.getListTransactions().getFirst().getAck() + "    synchronizer.getListTransactions().getFirst().getAck()");
             if (synchronizer.getListTransactions().getFirst().getAck() == banks.getBanksReference().size()) {
+
                 synchronizer.getListTransactions().getFirst().setExecutable(true);
             }
         }

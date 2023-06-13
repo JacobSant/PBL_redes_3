@@ -8,4 +8,5 @@ import java.util.UUID;
 @Setter
 public class PrivateAccountRequest {
     private String clientId;
+
 }
