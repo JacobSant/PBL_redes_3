@@ -14,19 +14,19 @@ public class TokenRepository {
     List<TokenModel> tokens = new ArrayList<>();
 
     public TokenModel save(TokenModel model) {
-        if(exists(model.getClientId())){
-            tokens.removeIf(t -> t.getClientId() == model.getClientId());
+        if(exists(model.getAccountId(),model.getClientId())){
+            tokens.removeIf(t -> t.getAccountId().equals(model.getAccountId()) && t.getClientId().equals(model.getClientId()));
         }
         tokens.add(model);
         return model;
     }
 
-    public boolean exists(UUID uuid, String token){
-        return tokens.stream().anyMatch(t -> t.getClientId() == uuid && t.getToken().equals(token));
+    public boolean exists(UUID accountId, UUID clientId){
+        return tokens.stream().anyMatch(t -> t.getAccountId().equals(accountId) && t.getClientId().equals(clientId));
     }
 
     public boolean exists(UUID uuid){
-        return tokens.stream().anyMatch(t -> t.getClientId() == uuid);
+        return tokens.stream().anyMatch(t -> t.getAccountId() == uuid);
     }
 
     public Optional<TokenModel> update(ClientModel client){
