@@ -4,8 +4,10 @@ import br.uefs.pbl_redes_3.exception.RequestException;
 import br.uefs.pbl_redes_3.model.Bank;
 import br.uefs.pbl_redes_3.model.ClientModel;
 import br.uefs.pbl_redes_3.model.PrivateAccountModel;
+import br.uefs.pbl_redes_3.model.TransfersModel;
 import br.uefs.pbl_redes_3.repository.ClientRepository;
 import br.uefs.pbl_redes_3.repository.PrivateAccountRepository;
+import br.uefs.pbl_redes_3.repository.PrivateTransferRepository;
 import br.uefs.pbl_redes_3.request.TransferRequest;
 import br.uefs.pbl_redes_3.response.TransferResponse;
 import br.uefs.pbl_redes_3.utils.Banks;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -27,16 +30,18 @@ public class BankTransferService {
     private final ModelMapper modelMapper;
     private final Banks banks;
     private final ClientRepository clientRepository;
+    private final PrivateTransferRepository transferRepository;
 
     public BankTransferService(final PropertiesManager propertiesManager,
                                final PrivateAccountRepository privateAccountRepository,
                                final ModelMapper modelMapper,
-                               final Banks banks, ClientRepository clientRepository) {
+                               final Banks banks, ClientRepository clientRepository, PrivateTransferRepository transferRepository) {
         this.propertiesManager = propertiesManager;
         this.privateAccountRepository = privateAccountRepository;
         this.modelMapper = modelMapper;
         this.banks = banks;
         this.clientRepository = clientRepository;
+        this.transferRepository = transferRepository;
     }
 
     public TransferResponse create(TransferRequest request) {
@@ -67,8 +72,12 @@ public class BankTransferService {
                     // Mudar retorno. model mapper receberá uma representação da tranferência e não da conta
                     Optional<PrivateAccountModel> result = privateAccountRepository.update(sourcePrivateAccount);
                     privateAccountRepository.update(destinyPrivateAccount);
+                    TransfersModel transfer = modelMapper.map(request,TransfersModel.class);
+                    transfer.setSourceAccountNumber(sourcePrivateAccount.getAccountNumber());
+                    transfer.setDate(LocalDateTime.now());
+
                     System.out.println("Linha 57 BankTransfer");
-                    return modelMapper.map(result.get(), TransferResponse.class);
+                    return modelMapper.map(transferRepository.save(transfer), TransferResponse.class);
 
                 } else {
                     throw new RequestException(HttpStatus.UNAUTHORIZED, "INSUFICIENT BALANCE");
@@ -86,7 +95,10 @@ public class BankTransferService {
                 // Salvar transferência no repositório
                 // Mudar retorno. model mapper receberá uma representação da tranferência e não da conta
                 Optional<PrivateAccountModel> updatedPrivateAccountOptional = privateAccountRepository.update(destinyPrivateAccount);
-                return null;
+                TransfersModel transfer = modelMapper.map(request,TransfersModel.class);
+                transfer.setDestinyAccountNumber(destinyPrivateAccount.getAccountNumber());
+                transfer.setDate(LocalDateTime.now());
+                return modelMapper.map(transferRepository.save(transfer),TransferResponse.class);
             } else {
                 throw new RequestException(HttpStatus.NOT_FOUND, "PRIVATE ACCOUNT");
             }
@@ -118,8 +130,11 @@ public class BankTransferService {
                             // Salvar tranferência no repositório
                             // Mudar retorno. model mapper receberá uma representação da tranferência e não da conta
                             System.out.println("Linha 93 BankTransfer");
-
-                            return modelMapper.map(sourcePrivateAccount, TransferResponse.class);
+                            TransfersModel transfer = modelMapper.map(request,TransfersModel.class);
+                            transfer.setSourceAccountNumber(sourcePrivateAccount.getAccountNumber());
+                            transfer.setDate(LocalDateTime.now());
+                            privateAccountRepository.update(sourcePrivateAccount);
+                            return modelMapper.map(transferRepository.save(transfer), TransferResponse.class);
                         } else {
                             HttpStatus responseStatus = response.getStatusCode();
                             throw new RequestException(responseStatus);

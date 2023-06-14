@@ -49,7 +49,6 @@ public class PrivateAccountTransferService {
                 request.setCpf(clientModel.getCpf());
                 synchronizer.send(request.getCpf(), request.getSourceBankId());
                 RestTemplate httpRequest = new RestTemplate();
-                //httpRequest.setErrorHandler(new RestTemplateResponseExceptionHandler());
                 if (banks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getSourceBankId())) {
                     Bank bank = banks.getBanksReference().stream()
                             .filter(b -> b.getId() == request.getSourceBankId()).findFirst().get();

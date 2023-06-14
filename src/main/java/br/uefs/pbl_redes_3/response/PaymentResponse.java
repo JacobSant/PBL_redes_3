@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaymentResponse {
-    private double balance;
+    private double value;
 }
