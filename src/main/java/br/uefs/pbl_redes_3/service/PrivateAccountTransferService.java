@@ -3,7 +3,6 @@ package br.uefs.pbl_redes_3.service;
 import br.uefs.pbl_redes_3.exception.RequestException;
 import br.uefs.pbl_redes_3.model.Bank;
 import br.uefs.pbl_redes_3.model.ClientModel;
-import br.uefs.pbl_redes_3.model.PrivateAccountModel;
 import br.uefs.pbl_redes_3.model.TokenModel;
 import br.uefs.pbl_redes_3.repository.ClientRepository;
 import br.uefs.pbl_redes_3.repository.TokenRepository;
@@ -52,7 +51,7 @@ public class PrivateAccountTransferService {
                 if (banks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getSourceBankId())) {
                     Bank bank = banks.getBanksReference().stream()
                             .filter(b -> b.getId() == request.getSourceBankId()).findFirst().get();
-                    String url = "http://" + bank.getIp() + ":" + bank.getPort() + "/pass_transfer/private_account";
+                    String url = "http://" + bank.getIp() + ":" + bank.getPort() + "/pass_transfer/"+request.getDestinyAccountType();
                     try {
                         ResponseEntity<TransferResponse> response = httpRequest.postForEntity(url, request, TransferResponse.class);
                         TransferResponse result = response.getBody();

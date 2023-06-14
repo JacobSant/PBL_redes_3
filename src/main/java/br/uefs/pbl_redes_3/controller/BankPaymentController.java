@@ -20,7 +20,15 @@ public class BankPaymentController {
     @PostMapping("/private_account")
     public PaymentResponse bankPayment(@RequestBody PaymentRequest paymentRequest){
         System.out.println(paymentRequest.getCpf());
-        return bankPaymentService.create(paymentRequest);
+        return bankPaymentService.privateCreate(paymentRequest);
     }
+
+    @PostMapping("/joint_account")
+    public PaymentResponse jointBankPayment(@RequestBody PaymentRequest paymentRequest) {
+        System.out.println(paymentRequest.getCpf());
+        return bankPaymentService.jointCreate(paymentRequest);
+    }
+
+
 
 }

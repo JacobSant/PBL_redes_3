@@ -80,10 +80,9 @@ public class Synchronizer {
         return listTransactions;
     }
 
-    public Boolean finish() {
-        System.out.println(listTransactions.size() + "syncronize linha 83");
+    public synchronized Boolean finish() {
+
         listTransactions.removeFirst();
-        System.out.println(listTransactions.size() + "syncronize linha 85");
         return true;
     }
 

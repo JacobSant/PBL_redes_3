@@ -5,7 +5,7 @@ import br.uefs.pbl_redes_3.model.Bank;
 import br.uefs.pbl_redes_3.model.ClientModel;
 import br.uefs.pbl_redes_3.model.TokenModel;
 import br.uefs.pbl_redes_3.repository.ClientRepository;
-import br.uefs.pbl_redes_3.repository.PrivateAccountRepository;
+import br.uefs.pbl_redes_3.repository.JointAccountRepository;
 import br.uefs.pbl_redes_3.repository.TokenRepository;
 import br.uefs.pbl_redes_3.request.PaymentRequest;
 import br.uefs.pbl_redes_3.response.PaymentResponse;
@@ -22,22 +22,22 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class PrivateAccountPaymentService {
+public class JointAccountPaymentService {
     private final TokenRepository tokenRepository;
     private final ModelMapper modelMapper;
     private final Banks banks;
-    private final PrivateAccountRepository privateAccountRepository;
+    private final JointAccountRepository jointAccountRepository;
     private final Synchronizer synchronizer;
     private final ClientRepository clientRepository;
 
-    public PrivateAccountPaymentService(TokenRepository tokenRepository,
-                                        ModelMapper modelMapper,
-                                        Banks banks,
-                                        PrivateAccountRepository privateAccountRepository, Synchronizer synchronizer, ClientRepository clientRepository) {
+    public JointAccountPaymentService(TokenRepository tokenRepository,
+                                      ModelMapper modelMapper,
+                                      Banks banks,
+                                      JointAccountRepository jointAccountRepository, Synchronizer synchronizer, ClientRepository clientRepository) {
         this.tokenRepository = tokenRepository;
         this.modelMapper = modelMapper;
         this.banks = banks;
-        this.privateAccountRepository = privateAccountRepository;
+        this.jointAccountRepository = jointAccountRepository;
         this.synchronizer = synchronizer;
         this.clientRepository = clientRepository;
     }
@@ -59,7 +59,7 @@ public class PrivateAccountPaymentService {
                 if (banks.getBanksReference().stream().anyMatch(b -> b.getId() == request.getSourceBankId())) {
                     Bank bank = banks.getBanksReference().stream()
                             .filter(b -> b.getId() == request.getSourceBankId()).findFirst().get();
-                    String url = "http://" + bank.getIp() + ":" + bank.getPort() + "/pass_payment/private_account";
+                    String url = "http://" + bank.getIp() + ":" + bank.getPort() + "/pass_payment/joint_account";
                     try {
                         ResponseEntity<PaymentResponse> response = httpRequest.postForEntity(url, request, PaymentResponse.class);
                         PaymentResponse result = response.getBody();
@@ -70,7 +70,7 @@ public class PrivateAccountPaymentService {
                         finish();
                         switch (e.getStatusCode()) {
                             case FORBIDDEN -> throw new RequestException(HttpStatus.FORBIDDEN, "CLIENT");
-                            case NOT_FOUND -> throw new RequestException(HttpStatus.NOT_FOUND, "PRIVATE ACCOUNT");
+                            case NOT_FOUND -> throw new RequestException(HttpStatus.NOT_FOUND, "JOINT ACCOUNT");
                             case UNAUTHORIZED ->
                                     throw new RequestException(HttpStatus.UNAUTHORIZED, "INSUFFICIENT BALANCE");
                             case BAD_REQUEST -> throw new RequestException(HttpStatus.BAD_REQUEST, "INVALID BANK ID");
@@ -95,7 +95,7 @@ public class PrivateAccountPaymentService {
     }
 
     private void finish() {
-        System.out.println("Private Account Tranfer Service linha 65");
+        System.out.println("Joint Account Tranfer Service linha 65");
         final RestTemplate request = new RestTemplate();
         banks.getBanksReference().forEach(t -> {
                     String url = "http://" + t.getIp() + ":" + t.getPort() + "/finish";

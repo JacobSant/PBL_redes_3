@@ -13,9 +13,10 @@ public class Banks {
     private static final List<Bank> banksReference = new ArrayList<>();
 
     public void initializeBanks(){
+        banksReference.add(new Bank(2,9090, "localhost"));
 
         banksReference.add(new Bank(1,8080, "localhost"));
-        banksReference.add(new Bank(2,9090, "localhost"));
+
     }
     public  List<Bank> getBanksReference() {
         return banksReference;

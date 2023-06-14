@@ -1,7 +1,6 @@
 package br.uefs.pbl_redes_3.repository;
 
 import br.uefs.pbl_redes_3.model.JointAccountModel;
-import br.uefs.pbl_redes_3.model.PrivateAccountModel;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -10,12 +9,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 @Repository
-public class JointAccountRepository implements IRepository<JointAccountModel, UUID>{
+public class JointAccountRepository implements IRepository<JointAccountModel, UUID> {
     List<JointAccountModel> jointAccounts = new ArrayList<>();
+
     @Override
     public JointAccountModel save(JointAccountModel model) {
-        model.setId(UUID.fromString(model.getAccountNumber() + UUID.randomUUID().toString()));
+        model.setId(UUID.nameUUIDFromBytes((model.getAccountNumber() + UUID.randomUUID().toString()).getBytes()));
         jointAccounts.add(model);
         return model;
     }
@@ -25,7 +26,7 @@ public class JointAccountRepository implements IRepository<JointAccountModel, UU
         return jointAccounts.removeIf(predicate);
     }
 
-    public boolean deleteById(UUID uuid){
+    public boolean deleteById(UUID uuid) {
         return jointAccounts.removeIf(acc -> acc.getId() == uuid);
     }
 
@@ -33,7 +34,7 @@ public class JointAccountRepository implements IRepository<JointAccountModel, UU
     public Optional<JointAccountModel> update(JointAccountModel model) {
         Optional<JointAccountModel> result = jointAccounts.stream().filter(acc -> acc.getAccountNumber() == model.getAccountNumber()).findFirst();
         Optional<JointAccountModel> updatedAccount = Optional.empty();
-        if(result.isPresent()){
+        if (result.isPresent()) {
             model.setId(result.get().getId());
             updatedAccount = Optional.of(model);
             jointAccounts.removeIf(acc -> acc.getId() == model.getId());
@@ -49,7 +50,7 @@ public class JointAccountRepository implements IRepository<JointAccountModel, UU
 
     @Override
     public Optional<JointAccountModel> findById(UUID uuid) {
-        return jointAccounts.stream().filter(acc -> acc.getId() == uuid).findFirst();
+        return jointAccounts.stream().filter(acc -> acc.getId().equals(uuid)).findFirst();
     }
 
     @Override
@@ -59,5 +60,9 @@ public class JointAccountRepository implements IRepository<JointAccountModel, UU
 
     public Optional<JointAccountModel> findByAccountNumber(int accountNumber) {
         return jointAccounts.stream().filter(acc -> acc.getAccountNumber() == accountNumber).findFirst();
+    }
+
+    public Optional<JointAccountModel> findByClientId(UUID clientId) {
+        return jointAccounts.stream().filter(acc -> acc.getClientId1().equals(clientId) || acc.getClientId2().equals(clientId)).findFirst();
     }
 }

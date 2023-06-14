@@ -8,7 +8,8 @@ import lombok.Setter;
 public class TransferRequest {
     private int destinyBankId;
     private int sourceBankId;
-    private int destinyPrivateAccountNumber;
+    private int destinyAccountNumber;
+    private String destinyAccountType;
     private int value;
     private int cpf;
 }

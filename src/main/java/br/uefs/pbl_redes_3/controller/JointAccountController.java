@@ -3,9 +3,9 @@ package br.uefs.pbl_redes_3.controller;
 import br.uefs.pbl_redes_3.request.JointAccountRequest;
 import br.uefs.pbl_redes_3.response.JointAccountResponse;
 import br.uefs.pbl_redes_3.service.JointAccountService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/bank_account_joint")
@@ -17,7 +17,13 @@ public class JointAccountController {
     }
 
     @PostMapping()
-    public JointAccountResponse create(JointAccountRequest jointAccountRequest){
+    public JointAccountResponse create(@RequestBody JointAccountRequest jointAccountRequest) {
         return jointAccountService.create(jointAccountRequest);
+    }
+
+    @GetMapping()
+    public JointAccountResponse findByClientId(@RequestParam String clientId){
+        UUID id = UUID.fromString(clientId);
+        return jointAccountService.findByClientID(id);
     }
 }

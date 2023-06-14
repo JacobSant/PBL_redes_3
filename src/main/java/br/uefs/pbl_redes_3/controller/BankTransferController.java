@@ -17,12 +17,12 @@ public class BankTransferController {
     }
 
     @PostMapping("/private_account")
-    public TransferResponse passPrivateTransfer(@RequestBody TransferRequest request){
-        return bankTransferService.create(request);
+    public TransferResponse privatePassPrivateTransfer(@RequestBody TransferRequest request) {
+        return bankTransferService.privateCreate(request);
     }
 
     @PostMapping("/joint_account")
-    public String passJoinTransfer(@RequestBody TransferRequest request){
-        return null;
+    public TransferResponse jointPassPrivateTransfer(@RequestBody TransferRequest request) {
+        return bankTransferService.jointCreate(request);
     }
 }
